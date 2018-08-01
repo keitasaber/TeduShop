@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TeduShop.Data.Infrastructure;
@@ -8,13 +9,14 @@ using TeduShop.Model.Models;
 
 namespace TeduShop.Data.Respositories
 {
-    public interface IProductRepository : IRepository<Product>
+    public interface IFooterRepository : IRepository<Footer>
     {
+
     }
 
-    public class ProductRepository : RepositoryBase<Product>, IProductRepository
+    public class FooterRepository : RepositoryBase<Footer>, IFooterRepository
     {
-        public ProductRepository(IDbFactory dbFactory) : base(dbFactory)
+        public FooterRepository(IDbFactory dbFactory) : base(dbFactory)
         {
         }
     }
