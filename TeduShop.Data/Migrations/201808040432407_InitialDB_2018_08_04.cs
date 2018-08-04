@@ -3,10 +3,21 @@ namespace TeduShop.Data.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialDB : DbMigration
+    public partial class InitialDB_2018_08_04 : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.Errors",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Message = c.String(),
+                        StackTrace = c.String(),
+                        CreatedDate = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.ID);
+            
             CreateTable(
                 "dbo.Footers",
                 c => new
@@ -220,6 +231,13 @@ namespace TeduShop.Data.Migrations
                     {
                         PostID = c.Int(nullable: false),
                         TagID = c.String(nullable: false, maxLength: 50, unicode: false),
+                        CreatedDate = c.DateTime(),
+                        CreatedBy = c.String(maxLength: 256),
+                        UpdatedDate = c.DateTime(),
+                        UpdatedBy = c.String(maxLength: 256),
+                        MetaKeyword = c.String(maxLength: 256),
+                        MetaDescription = c.String(maxLength: 256),
+                        Status = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => new { t.PostID, t.TagID })
                 .ForeignKey("dbo.Posts", t => t.PostID, cascadeDelete: true)
@@ -318,6 +336,7 @@ namespace TeduShop.Data.Migrations
             DropTable("dbo.Products");
             DropTable("dbo.ProductTags");
             DropTable("dbo.Footers");
+            DropTable("dbo.Errors");
         }
     }
 }

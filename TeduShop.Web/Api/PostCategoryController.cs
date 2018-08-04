@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,6 +8,8 @@ using System.Web.Http;
 using TeduShop.Model.Models;
 using TeduShop.Service;
 using TeduShop.Web.Infrastructure.Core;
+using TeduShop.Web.Mappings;
+using TeduShop.Web.Models;
 
 namespace TeduShop.Web.Api
 {
@@ -19,7 +22,6 @@ namespace TeduShop.Web.Api
             this._postCategoryService = postCategoryService;
         }
 
-        [Route("getall")]
         public HttpResponseMessage Post(HttpRequestMessage request, PostCategory postCategory)
         {
             return CreateHttpResponse(request, () =>
@@ -40,22 +42,16 @@ namespace TeduShop.Web.Api
             });
         }
 
+        [Route("getall")]
         public HttpResponseMessage Get(HttpRequestMessage request)
         {
             return CreateHttpResponse(request, () =>
             {
-                HttpResponseMessage response = null;
-                if (ModelState.IsValid)
-                {
-                    request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-                }
-                else
-                {
-                    var listCategory = _postCategoryService.GetAll();
-                    _postCategoryService.Save();
 
-                    response = request.CreateResponse(HttpStatusCode.OK, listCategory);
-                }
+                var listCategory = _postCategoryService.GetAll().ToList();
+                var listCategoryViewModel = AutoMapperConfiguration.Mapping.Map<List<PostCategoryViewModel>>(listCategory);
+                HttpResponseMessage response = request.CreateResponse(HttpStatusCode.OK, listCategoryViewModel);
+
                 return response;
             });
         }
